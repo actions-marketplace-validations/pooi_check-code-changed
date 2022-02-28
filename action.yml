@@ -1,0 +1,25 @@
+name: "Check code changed"
+description: "Check if the target path code has changed"
+author: "pooi (Taewoo You)"
+
+inputs:
+  github-token:
+    description: "secrets.GITHUB_TOKEN value"
+    required: true
+  target-path:
+    description: 'The target path'
+    required: true
+
+outputs:
+  changed:
+    description: 'true or false value'
+    value: ${{ steps.diff-check.outputs.changed }}
+
+runs:
+  using: composite
+  steps:
+    - name: Check if the target path code has changed
+      id: diff-check
+      shell: bash
+      run: |
+        $GITHUB_ACTION_PATH/main.py ${{ inputs.github-token }} ${{ github.event.pull_request.url }} ${{ inputs.target-path }}
