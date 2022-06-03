@@ -26,9 +26,10 @@ def get_pull_request_files():
 def main():
     changed_files = get_pull_request_files()
     for changed_file in changed_files:
-        if changed_file.startswith(target_path):
-            print("::set-output name=changed::true")
-            return
+        for target_path in target_path_list:
+            if changed_file.startswith(target_path):
+                print("::set-output name=changed::true")
+                return
     print("::set-output name=changed::false")
 
 
@@ -37,6 +38,6 @@ if __name__ == '__main__':
 
     github_token = sys.argv[1]
     pull_request_url = sys.argv[2]
-    target_path = sys.argv[3]
+    target_path_list = [p.strip() for p in sys.argv[3].split(",")]
 
     main()
